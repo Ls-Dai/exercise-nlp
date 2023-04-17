@@ -1,0 +1,10 @@
+chase
+costco
+discover
+lego
+microsoft
+netflix
+opensea
+steam
+tesco
+walmart
