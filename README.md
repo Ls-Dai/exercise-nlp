@@ -143,6 +143,7 @@ Current codebase still has space to get better. There are two important things I
 
 1. Try a way to clean the database. For example, the non-sense words, the adjoined words. 
 2. Robust function in my service. For example, input check. 
+3. Make a more robust and readable data pipeline for model training and testing.
 
 
 
