@@ -103,6 +103,19 @@ Then we are trying to start the service in `./Flask/` by running,
 ```
 python run.py
 ```
+```
+(base) lisen@pineapple:/home/lisen/exercise-nlp/Flask$ python run.py 
+ * Serving Flask app 'app'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:55555
+ * Running on http://128.59.9.215:55555
+Press CTRL+C to quit
+ * Restarting with watchdog (inotify)
+ * Debugger is active!
+ * Debugger PIN: 545-816-954
+```
 
 Now the service is started. Keep it on. Start **another terminal**, in `./`, run
 
@@ -111,6 +124,16 @@ bash test.sh
 ```
 
 You should see the result from the service right now.
+
+```
+(base) lisen@pineapple:/home/lisen/exercise-nlp$ bash test.sh 
+[
+  {
+    "brand": "netflix",
+    "probablity": 0.825648307800293
+  }
+]
+```
 
 
 
