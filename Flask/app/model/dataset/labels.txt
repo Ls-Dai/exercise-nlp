@@ -2,8 +2,8 @@ chase
 costco
 discover
 lego
-netflix
 microsoft
+netflix
 opensea
 steam
 tesco

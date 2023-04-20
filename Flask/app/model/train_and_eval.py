@@ -2,20 +2,18 @@ import torch
 import torch.nn as nn 
 import os 
 
-from data import TrainTestDataLoader
+from dataloader import TrainTestDataLoader
 from model import FastText, Preprocessor
 
-def train():
-    dataloader = TrainTestDataLoader(json_file_path="./dataset/train.json", batch_size=1024)
-    preprocessor = Preprocessor()
-    model = FastText(3000, 1500, 500, 10)
-    criterion = nn.CrossEntropyLoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.0001, weight_decay=0.00001)
+
+def train(data_source="./dataset/train.json", batch_size=1024, model=FastText(3000, 1500, 500, 10), preprocessor=Preprocessor(), criterion=nn.CrossEntropyLoss(), learning_rate=0.0001):
+    dataloader = TrainTestDataLoader(json_file_path=data_source, batch_size=batch_size)
+    model.train()
+    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=0.00001)
     
     for i in range(100):
         train_epoch(i + 1, dataloader, preprocessor, model, criterion, optimizer)
-    
-    return 
+        
     
 def train_epoch(epoch, dataloader, preprocessor, model, criterion, optimizer):
     model.train()
@@ -35,14 +33,11 @@ def train_epoch(epoch, dataloader, preprocessor, model, criterion, optimizer):
     torch.save(model.state_dict(), "./saved_models/fasttext.pt")
     
     
-def test():
-    dataloader = TrainTestDataLoader(json_file_path="./dataset/test.json", batch_size=1024)
-    preprocessor = Preprocessor()
-    model = FastText(3000, 1500, 500, 10)
-    state_dict = torch.load("./saved_models/fasttext.pt")
+def test(data_source="./dataset/test.json", model=FastText(3000, 1500, 500, 10), saved_model_path="./saved_models/fasttext.pt", preprocessor=Preprocessor(), criterion=nn.CrossEntropyLoss()):
+    dataloader = TrainTestDataLoader(json_file_path=data_source, batch_size=1)
+    state_dict = torch.load(saved_model_path)
     model.load_state_dict(state_dict)
     model.eval()
-    criterion = nn.CrossEntropyLoss()
     
     with torch.no_grad():
         total_loss = 0
@@ -58,15 +53,12 @@ def test():
             total += y_true.shape[0]
         print("test loss:", total_loss)
         print("test acc:", correct / total)
+     
             
-def train_and_eval():
-    TrainTestDataLoader(json_file_path="./dataset/exercise_data.json", dump=True)
-    dataloader = TrainTestDataLoader(json_file_path="./dataset/train.json", batch_size=1024)
-    preprocessor = Preprocessor()
-    model = FastText(3000, 1500, 500, 10)
+def train_and_eval(data_source="./dataset/train.json", batch_size=1024, model=FastText(3000, 1500, 500, 10), preprocessor=Preprocessor(), criterion=nn.CrossEntropyLoss(), learning_rate=0.0001):
+    dataloader = TrainTestDataLoader(json_file_path=data_source, batch_size=batch_size)
     model.train()
-    criterion = nn.CrossEntropyLoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=0.00001)
     
     for i in range(20):
         train_epoch(i + 1, dataloader, preprocessor, model, criterion, optimizer)
@@ -75,6 +67,7 @@ def train_and_eval():
     if not os.path.exists("./saved_models"):
         os.mkdir("./saved_models")
     torch.save(model.state_dict(), "./saved_models/fasttext.pt")
+    
     
 if __name__ == "__main__":
     train_and_eval()

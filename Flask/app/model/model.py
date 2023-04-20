@@ -5,9 +5,11 @@ import torch.nn.functional as F
 import random 
 import numpy as np 
 
+from utils import load_vocab, load_labels
+
 
 class FastText(nn.Module):
-    def __init__(self, vocab_size, embed_size, hidden_size, num_classes, *args, **kwargs) -> None:
+    def __init__(self, vocab_size=1000, embed_size=1000, hidden_size=100, num_classes=10, *args, **kwargs) -> None:
         super(FastText, self).__init__(*args, **kwargs)
 
         self.vocab_size = vocab_size
@@ -29,15 +31,13 @@ class FastText(nn.Module):
         x = self.activation(x)
         return x
     
+    
 class Preprocessor:
     def __init__(self, vocab_path="./dataset/vocab.txt", labels_path="./dataset/labels.txt") -> None:
-        with open(vocab_path, "r") as f:
-            self.vocab = f.read().split("\n")
+        self.vocab = load_vocab(vocab_path)
         self.vocab_dict = {key: value for key, value in zip(self.vocab, range(1, len(self.vocab) + 1))}
             
-        with open(labels_path, "r") as f:
-            self.labels = f.read().split("\n")
-            
+        self.labels = load_labels(labels_path)
         self.labels_dict = {key: value for key, value in zip(self.labels, range(len(self.labels)))}
         
     def get_vocab_indices(self, texts, length=2000):
