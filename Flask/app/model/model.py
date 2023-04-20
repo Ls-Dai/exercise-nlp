@@ -5,7 +5,10 @@ import torch.nn.functional as F
 import random 
 import numpy as np 
 
-from utils import load_vocab, load_labels
+try:
+    from app.model.utils import load_vocab, load_labels
+except:
+    from utils import load_vocab, load_labels
 
 
 class FastText(nn.Module):

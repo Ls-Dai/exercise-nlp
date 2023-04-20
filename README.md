@@ -54,11 +54,15 @@ For classification tasks, considering its latency in production, we should first
 
 `Flask/app/model/` is the model directory, it is about model training, evaluation. 
 
-`Flask/app/dataset/` is the dataset directory for model training and evaluation. `train_test_split.py` is used to split the original dataset `exercise_data.json`. 
+`Flask/app/dataset/` is the dataset directory for model training and evaluation. 
 
 `Flask/app/dataset/saved_models` contains the saved models.
 
 `Flask/app/views.py` contains the server processing code, which would read the saved models from `Flask/app/dataset/saved_models` and do inference. 
+
+`Flask/app/model/utils.py` provides lots of functions handling vocab build, labels build and train-test split.
+
+`Flask/app/model/main.py` provides entrance to run scripts.
 
 ## Model Performance 
 
@@ -82,21 +86,47 @@ pip install -r requirements.txt
 
 Then notice that we should at least have `./Flask/app/model/dataset/exercise_data.json`
 
-Inside `./Flask/app/model/dataset/`, run 
+Inside `./Flask/app/model/`, run 
 
 ```
-python train_test_split.py
+python main.py -m build
 ```
 
-This will generate training and testing dataset.
+This will generate training and testing dataset. 
 
-Then in `./Flask/app/model/`, run
+Afterwards, run
 
 ```
-python train_and_eval.py
+python main.py -m train_and_eval
 ```
 
-to train and eval the model. The model file would be saved to `./Flask/app/model/saved_models`.
+It will train and eval the model. The model file would be saved to `./Flask/app/model/saved_models`.
+
+Instead of `train_and_eval`, alternatively, you can run,
+
+```
+python main.py -m train
+```
+
+```
+python main.py -m test
+```
+
+Those would provide seperate training and testing processes. For example, after training, you can see the model performace (metrics) by,
+
+```
+python main.py -m test
+```
+
+It shows,
+
+```
+(base) lisen@pineapple:/home/lisen/exercise-nlp/Flask/app/model$ python main.py -m test
+test loss: 2592.2102720737457
+test acc: 0.7037542662116041
+```
+
+There are more arg options in the future to manipulate the training. 
 
 Then we are trying to start the service in `./Flask/` by running,
 
